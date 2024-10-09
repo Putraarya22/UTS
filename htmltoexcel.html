@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV dan Tampilkan Tabel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unggah File CSV</h1>
+    <input type="file" id="csvFileInput" accept=".csv">
+    <button onclick="processCSV()">Tampilkan Tabel</button>
+    <table id="csvTable"></table>
+
+    <script>
+        function processCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Pilih file CSV terlebih dahulu.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result;
+                const rows = text.split('\n').map(row => row.split(','));
+                displayTable(rows);
+            };
+            reader.readAsText(file);
+        }
+
+        function displayTable(data) {
+            const table = document.getElementById('csvTable');
+            table.innerHTML = ''; // Kosongkan tabel sebelumnya
+
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement(index === 0 ? 'th' : 'td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
